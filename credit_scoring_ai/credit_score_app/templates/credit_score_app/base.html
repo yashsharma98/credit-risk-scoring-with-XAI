@@ -1,0 +1,69 @@
+{% load static %}
+
+{% url 'home' as home %}
+
+{% url 'history' as history %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}
+        <title>Base template</title>
+    {% endblock %}
+    <link rel="stylesheet" href="{% static 'credit_score_app/home.css' %}">
+    {% block links %}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    {% endblock %}
+</head>
+<body>
+    <nav class="navbar fixed-top navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand logo" href="#">Credit Scoring</a>
+                        
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <ul class="navbar-nav ms-auto">
+                    <div class="d-flex gap-2">
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="{% if request.path == home %} btn btn-transparent active {% else %} btn btn-transparent {% endif %}" href="{% url 'home' %}">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="{% if request.path == history %} btn btn-transparent active {% else %} btn btn-outline {% endif %}" href="{% url 'history' %}">History</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="btn btn-outline" href="{% url 'landingpg' %}">Home</a>
+                            </li>
+                        {% endif %}
+        
+                        {% if user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle btn btn-outline" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ request.user.get_full_name}}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><h6 class="dropdown-header">{{ request.user.email }}</h6></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a type="button" class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% block content %}
+
+    {% endblock %}
+</body>
+</html>

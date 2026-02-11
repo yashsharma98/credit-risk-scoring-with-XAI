@@ -1,0 +1,149 @@
+{% extends 'credit_score_app/base.html' %} 
+
+{% load static %} 
+
+{% block title %}
+    <title>History</title>
+{% endblock %} 
+
+{% block content%}
+<body>
+    <div class="main-container history-container">
+        <div class="header-area">
+            <div class="d-flex justify-content-between">
+                <h1>Prediction History</h1>
+                <p><span class="text-muted">Total : </span> {{ total_count }}</p>
+            </div>
+        </div>
+
+        {% if results %} 
+        
+            {% for item in results %}
+                <div class="sr-container">
+                    <div class="sr-no">{{forloop.counter}}.</div>
+                </div>
+                <div class="main-history-content">
+                    <div class="history-header">
+                        <div class="d-flex justify-content-between">
+                            <div class="history-header-content">
+                                <span class="text-muted">Category : </span>
+                                <span class="header-value">{{ item.prediction.predicted_category }}</span>
+                            </div>
+
+                            <div class="history-header-content">
+                                <span class="text-muted">Score : </span>
+                                <span>{{ item.prediction.credit_score }} / 850</span>
+                            </div>
+                            
+                            <div class="history-header-content">
+                                <span class="text-muted">Date : </span>
+                                <span>{{ item.prediction.created_at|date:"M d, Y" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="history-entry">
+                    <table class="data-table">
+                        <tbody>
+                        <tr>
+                            <td class="label-text">Annual Income</td>
+                            <td class="value-text">${{ item.prediction.annual_income }}</td>
+                            <td class="label-text">History</td>
+                            <td class="value-text">
+                            {{ item.prediction.credit_history_months }} Months
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-text">Outstanding Debt</td>
+                            <td class="value-text">${{ item.prediction.outstanding_debt }}</td>
+                            <td class="label-text">Credit Inquiries</td>
+                            <td class="value-text">
+                            {{ item.prediction.num_credit_inquiries }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-text">Interest Rate</td>
+                            <td class="value-text">{{ item.prediction.interest_rate }}%</td>
+                            <td class="label-text">Total Bank Accounts</td>
+                            <td class="value-text">{{ item.prediction.num_bank_accounts }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label-text">Monthly EMI</td>
+                            <td class="value-text">
+                            ${{ item.prediction.total_emi_per_month }}
+                            </td>
+                            <td class="label-text">Credit Mix</td>
+                            <td class="value-text">{{ item.prediction.credit_mix_label }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label-text">Monthly Balance</td>
+                            <td class="value-text">${{ item.prediction.monthly_balance }}</td>
+                            <td class="label-text">Changed Limit</td>
+                            <td class="value-text">
+                            {{ item.prediction.changed_credit_limit }}%
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-text">Delay Days</td>
+                            <td class="value-text">
+                            {{ item.prediction.delay_from_due_date }}
+                            </td>
+
+                            <td class="label-text">Paid Minimum Amount</td>
+                            <td class="value-text">{{ item.prediction.payment_min_label }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="prob-row d-flex justify-content-between">
+                        <div class="prob-item">
+                        <div class="value-text">{{ item.prediction.prob_good_pct }}%</div>
+                        <div class="label-text">Good</div>
+                        </div>
+                        <div class="prob-item">
+                        <div class="value-text">{{ item.prediction.prob_standard_pct }}%</div>
+                        <div class="label-text">Standard</div>
+                        </div>
+                        <div class="prob-item">
+                        <div class="value-text">{{ item.prediction.prob_poor_pct }}%</div>
+                        <div class="prob-label label-text">Poor</div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-container d-flex justify-content-between">
+                        <div class="analysis-content">
+                        <div class="section-title">Strengths</div>
+                        {% for factor in item.positive_factors %}
+                        <div class="factor-item">• {{ factor }}</div>
+                        {% endfor %}
+                        </div>
+                        <div class="analysis-content">
+                        <div class="section-title">Risks</div>
+                        {% for factor in item.negative_factors %}
+                        <div class="factor-item">• {{ factor }}</div>
+                        {% endfor %}
+                        </div>
+                    </div>
+
+                    {% if item.prediction.ai_explanation %}
+                    <div class="ai-summary">
+                        <div class="section-title" style="margin-bottom: 8px">
+                        Summary
+                        </div>
+                        <p class="ai-text">{{ item.prediction.ai_explanation }}</p>
+                    </div>
+                    {% endif %}
+                    </div>
+                </div>
+                
+                <hr class="border border-2 my-4 opacity-75">
+
+            {% endfor %} 
+        
+        {% else %}
+            <p>No history available</p>
+        {% endif %}
+        
+
+    </div>
+</body>
+{% endblock %}

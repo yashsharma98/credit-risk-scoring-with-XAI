@@ -1,0 +1,13 @@
+{
+  "credit_mix": {
+    "Bad": 0,
+    "Good": 1,
+    "Standard": 2,
+    "Unknown": 3
+  },
+  "payment_of_min_amount": {
+    "No": 0,
+    "Unknown": 1,
+    "Yes": 2
+  }
+}

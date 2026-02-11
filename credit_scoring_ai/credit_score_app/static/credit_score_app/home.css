@@ -1,0 +1,446 @@
+@import url('https://fonts.googleapis.com/css2?family=Unna:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Unna", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+body {
+    background-color: white;
+    line-height: 1.6;
+}
+
+/* base template */
+.navbar {
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.navbar .navbar-brand{
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-left: 40px;
+}
+
+.navbar-nav{
+    margin-right: 40px;
+}
+
+.navbar-nav li a:not(.dropdown-menu li a){
+    border-radius: 30px;
+    border: 1.5px solid transparent;
+    padding-bottom: 7px;
+}
+
+.navbar-nav li a:hover:not(.dropdown-menu li a),
+.navbar-nav .dropdown a.show{
+    border: 1.5px solid black;
+}
+
+.navbar-nav li a.active{
+    background: black;
+    color: white;
+}
+
+/* Landing page */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    margin-top: 100px;
+    padding: 0 20px;
+}
+
+.landingpg-navbar {
+    padding: 11px;
+    max-width: 1450px;
+    margin-left: 40px;
+}
+
+.logo {
+    font-weight: 800;
+    font-size: 1.5rem;
+}
+
+.container-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 40px;
+    padding: 40px 0;
+}
+
+.text-section {
+    flex: 1;
+    min-width: 600px;
+}
+
+.image-section {
+    flex: 1.5;
+    text-align: right;
+}
+
+.image-section img {
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    border-radius: 12px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    line-height: 50px;
+    margin-bottom: 20px;
+}
+
+.explanation h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.explanation p {
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 1.2rem;
+}
+
+.prediction-line {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    border-radius: 30px;
+    display: inline-block;
+    font-weight: 500;
+    font-size: 1.05rem;
+    padding: 12px 30px;
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+
+.btn-black {
+    background: black;
+    color: white;
+    border: 2px solid black;
+}
+
+.btn-outline {
+    background: transparent;
+    color: black;
+    border: 2px solid black;
+}
+
+.btn:hover {
+    border: 2px solid #64748b;
+    background: #64748b;
+    color: white;
+}
+
+@media (max-width: 992px) {
+    .container{
+        margin-top: -50px;
+    }
+
+    .container-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .image-section {
+        order: -1;
+        width: 100%;
+    }
+
+    .text-section {
+        min-width: 400px;
+    }
+
+    h1 {
+        font-size: 2.2rem;
+        line-height: 40px;
+    }
+
+    .explanation h3 {
+        font-size: 1.1rem;
+    }
+
+    .explanation p {
+        font-size: 1.1rem;
+    }
+
+    .prediction-line {
+        font-size: 1.1rem;
+    }
+
+    .button-group {
+        justify-content: center;
+    }
+
+    .btn {
+        font-size: 1rem;
+        padding: 8px 30px;
+    }
+}
+
+/* Login/Signup page */
+.primary-container {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-container h2{
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+
+.form-container button {
+    border-radius: 30px;
+    background: black;
+    border: 0;
+    color: white;
+    font-weight: 500;
+    padding: 8px 20px;
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+
+.form-container button:hover {
+    border: 0;
+    background: #64748b;
+    color: white;
+}
+
+/* Home page */
+.main-container { 
+    max-width: 850px; 
+    margin: auto; 
+    padding: 0 20px; 
+}
+
+.header-area { 
+    margin-top: 100px;
+    margin-bottom: 10px;
+}
+
+.header-area h1 { 
+    font-weight: 500; 
+    font-size: 1.2rem; 
+}
+
+.form-label { 
+    font-weight: 500; 
+    color: #64748b; 
+    margin-bottom: 6px; 
+}
+
+.form-control, .form-select {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    box-shadow: none !important;
+}
+
+form button.predict-btn {
+    border: 0;
+    background: black;
+    color: white;
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+form button.predict-btn:hover{
+    border: 0;
+    background: #64748b;
+    color: white;
+}
+
+.main-container h4{
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.content-section {
+    padding: 20px 0;
+    margin-bottom: 20px;
+}
+
+.content-section h6{
+    font-size: 1.2rem;
+}
+
+.prediction-container{
+    background: whitesmoke;
+    border-radius: 20px;
+    padding: 12px;
+}
+
+.prediction-container .content-section {
+    border-bottom: 2px solid #f8fafc;
+}
+
+.analysis-column {
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.category-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.cat-pill {
+    /* padding: 6px 16px; */
+    border-radius: 20px;
+    font-weight: 600;
+    margin-top: 12px;
+}
+
+.shap-img { 
+    border-radius: 10px;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.narration-box {
+    background: #f1f5f9;
+    padding: 10px;
+    border-radius: 15px;
+    font-size: 1.2rem;
+}
+
+/* History page */
+.sr-container{
+    position: relative;
+}
+
+.sr-no{
+    /* background: red; */
+    font-size: 1.3rem;
+    font-weight: 500;
+    position: absolute;
+    top: 12px;
+    left: -20px;
+}
+
+.main-history-content{
+    background: whitesmoke;
+    border-radius: 20px;
+}
+
+.history-container .header-area h1{
+    font-size: 1.5rem;
+}
+
+.history-container .header-area p{
+    font-weight: 500;
+}
+
+.history-header {
+    background: gainsboro;
+    border-radius: 14px 14px 0 0;
+    padding: 15px;
+    /* margin-bottom: 20px; */
+}
+
+.history-entry {
+    /* background: ghostwhite; */
+    border-radius: 20px;
+    margin-top: 10px;
+    padding: 15px;
+}
+
+.history-header-content {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.header-value{
+  text-transform: uppercase;
+}
+
+.data-table {
+    width: 100%;
+    margin-bottom: 30px;
+    border-collapse: collapse;
+}
+
+.data-table td {
+    padding: 10px 0;
+    border-bottom: 1px solid gainsboro;
+    width: 28%;
+}
+
+.value-text {
+    font-weight: 600;
+}
+
+.prob-row {
+    background: white;
+    border-radius: 20px;
+    padding: 15px 0;
+    margin-bottom: 30px;
+}
+
+.prob-item {
+    text-align: center;
+    margin: 0 50px;
+}
+
+.analysis-container {
+    background: white;
+    padding: 15px 0;
+    border-radius: 20px;
+}
+
+.analysis-content{
+    margin: 0 50px;
+}
+
+.section-title {
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+
+/* AI Explanation Box */
+.ai-summary {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 16px;
+}
+
+.ai-text {
+    line-height: 1.6;
+    margin: 0;
+}
+
+hr{
+    margin: 50px 0;
+}

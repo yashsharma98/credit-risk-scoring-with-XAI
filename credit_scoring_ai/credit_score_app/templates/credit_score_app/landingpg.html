@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Scoring</title>
+    <link rel="stylesheet" href="{% static 'credit_score_app/home.css' %}">
+</head>
+<body>
+
+    <nav class="landingpg-navbar">
+        <div class="logo">Credit Scoring</div>
+    </nav>
+
+    <main class="container">
+        <div class="container-section">
+            <div class="text-section">
+                <h1>An Explainable AI-Based Credit Scoring System Using Machine and Deep Learning Models</h1>
+                
+                <div class="explanation">
+                    <p>Our system uses machine learning to analyze credit information, so you don't just get a score you also see why it happened.</p>
+                </div>
+
+                <div class="prediction-line">
+                    <h3>Get Your Score Today...</h3>
+                </div>
+
+                <div class="button-group">
+                    <a href="{% url 'login' %}" class="btn btn-black">Login</a>
+                    <a href="{% url 'signup' %}" class="btn btn-outline">Sign Up</a>
+                </div>
+            </div>
+
+            <div class="image-section">
+                <img src="https://img.freepik.com/free-vector/businessman-pushing-credit-score-speedometer-from-poor-good-tiny-person-improving-personal-credit-history-with-efforts-flat-vector-illustration-business-reputation-customer-loan-concept_74855-20943.jpg?semt=ais_hybrid&w=740&q=80" alt="Credit Score Graphic">
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
