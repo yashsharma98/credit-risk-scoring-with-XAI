@@ -110,7 +110,6 @@ pyparsing==3.2.3
 pypiwin32==223
 python-dateutil==2.9.0.post0
 pytz==2025.2
-pywin32==311
 PyYAML==6.0.3
 pyzmq==27.0.2
 queuelib==1.8.0
