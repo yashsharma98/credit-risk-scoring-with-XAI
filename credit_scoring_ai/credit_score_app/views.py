@@ -9,7 +9,7 @@ from django.shortcuts import redirect, render
 from django.views.decorators.cache import cache_control
 
 from .forms import registration_form
-from .ml_utils import predictor
+from .ml_utils import prediction
 from .models import CreditScore
 
 
@@ -91,6 +91,7 @@ def homeView(request):
                 "total_emi_per_month": float(request.POST.get("total_emi_per_month")),
             }
 
+            predictor = prediction()
             prediction_result = predictor.predict(input_data)
 
             prediction_result["prob_good_pct"] = prediction_result["prob_good"] * 100
@@ -156,6 +157,7 @@ def historyView(request):
             "total_emi_per_month": pred.total_emi_per_month,
         }
 
+        predictor = prediction()
         factors = predictor.analyze_factors(input_data)
 
         results.append({"prediction": pred, "positive_factors": factors["positive"], "negative_factors": factors["negative"]})

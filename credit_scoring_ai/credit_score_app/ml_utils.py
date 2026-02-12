@@ -12,8 +12,6 @@ matplotlib.use("Agg")
 import re
 
 import matplotlib.pyplot as plt
-import shap
-from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
 class CreditScorePredictor:
@@ -43,11 +41,21 @@ class CreditScorePredictor:
         with open(model_dir / "categorical_mappings.json", "r") as f:
             self.categorical_mappings = json.load(f)
 
-        model_name = "Qwen/Qwen2.5-0.5B-Instruct"
-        self.qwen_model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype="auto", device_map="auto")
-        self.qwen_tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.qwen_model = None
+        self.qwen_tokenizer = None
 
         self.initialized = True
+
+    def load_qwen(self):
+        if self.qwen_model is None:
+            import torch
+            from transformers import AutoModelForCausalLM, AutoTokenizer
+
+            model_name = "Qwen/Qwen2.5-0.5B-Instruct"
+
+            self.qwen_model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16, device_map="cpu")
+
+            self.qwen_tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     def predict(self, input_data):
         input_df = pd.DataFrame([input_data])[self.feature_names]
@@ -79,6 +87,8 @@ class CreditScorePredictor:
 
     def generate_ai_explanation(self, input_data, prediction_result):
         try:
+            self.load_qwen()
+
             credit_mix_map = {0: "Bad", 1: "Good", 2: "Standard", 3: "Unknown"}
             payment_min_map = {0: "No", 1: "Unknown", 2: "Yes"}
 
@@ -129,7 +139,7 @@ class CreditScorePredictor:
                 {
                     "role": "system",
                     "content": "Consider as financial advisor. Provide clear explanations using bullet points only. Do not use markdown formatting symbols like #, *, or **.",  # noqa: E501
-                },  # noqa: E501
+                },
                 {"role": "user", "content": prompt},
             ]
 
@@ -159,6 +169,8 @@ class CreditScorePredictor:
 
     def generate_shap_plot(self, input_data, pred_encoded):
         try:
+            import shap
+
             input_df = pd.DataFrame([input_data])[self.feature_names]
             explainer = shap.TreeExplainer(self.model)
             shap_values = explainer.shap_values(input_df)
@@ -191,6 +203,8 @@ class CreditScorePredictor:
             return None
 
     def get_shap_breakdown(self, input_data):
+        import shap
+
         input_df = pd.DataFrame([input_data])[self.feature_names]
         explainer = shap.TreeExplainer(self.model)
         shap_values = explainer.shap_values(input_df)
@@ -240,4 +254,5 @@ class CreditScorePredictor:
         }
 
 
-predictor = CreditScorePredictor()
+def prediction():
+    return CreditScorePredictor()
