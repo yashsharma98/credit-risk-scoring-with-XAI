@@ -115,12 +115,16 @@
             </div>
           </div>
 
-          {% if shap_plot %}
-          <div class="content-section">
-              <h6 class="fw-bold">SHAP Explanation</h6>
-              <img src="{{ shap_plot }}" class="shap-img">
-          </div>
-          {% endif %}
+            {% if shap_plot %}
+                <div class="content-section">
+                    <h6 class="fw-bold">SHAP Explanation</h6>
+                    <img src="{{ shap_plot }}" class="shap-img">
+                </div>
+            {% else %}
+                <div class="alert alert-secondary shap-alert" role="alert">
+                    SHAP image unavailable!
+                </div>
+            {% endif %}
 
           <div class="content-section">
               <h6 class="fw-bold">Summary</h6>

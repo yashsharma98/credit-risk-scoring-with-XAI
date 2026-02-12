@@ -135,7 +135,7 @@ class CreditScorePredictor:
             return text
 
         except Exception:
-            return "Unable to generate AI explanation at this time."
+            return "Unable to generate AI explanation at this time"
 
     def generate_shap_plot(self, input_data, pred_encoded):
         try:

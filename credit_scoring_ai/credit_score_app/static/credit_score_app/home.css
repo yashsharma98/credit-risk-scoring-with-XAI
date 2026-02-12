@@ -25,6 +25,12 @@ body {
     font-size: 1.5rem;
     font-weight: 800;
     margin-left: 40px;
+    transition: 0.2s;
+}
+
+.navbar .navbar-brand:hover{
+    transform: scale(1.03);
+    color: rgb(41, 40, 40);
 }
 
 .navbar-nav{
@@ -52,6 +58,7 @@ body {
     border-radius: 30px;
     border: 1.5px solid transparent;
     padding-bottom: 7px;
+    transition: all 0.3s;
 }
 
 .navbar-nav li a:hover:not(.dropdown-menu li a),
@@ -62,6 +69,21 @@ body {
 .navbar-nav li a.active{
     background: black;
     color: white;
+}
+
+.navbar-nav li a:focus,
+.navbar-nav li a:active{
+    transform: scale(0.9);
+}
+
+.dropdown-menu .dropdown-header{
+    color: black;
+}
+
+.dropdown-menu a:focus,
+.dropdown-menu a:active{
+    background: whitesmoke;
+    color: black;
 }
 
 /* Landing page */
@@ -239,12 +261,13 @@ h1 {
     padding: 8px 20px;
     text-decoration: none;
     width: auto;
-    transition: transform 0.2s;
+    transition: 0.3s;
 }
 
 .form-container button:focus,
 .form-container button:active{
     background: gray;
+    transform: scale(0.9);
 }
 
 .form-container button:hover {
@@ -293,11 +316,14 @@ form button.predict-btn {
     padding: 8px 20px;
     font-weight: 500;
     margin-top: 10px;
+    transition: all 0.3s;
 }
 
 form button.predict-btn:focus,
 form button.predict-btn:active{
     background: gray;
+    padding: 6px 18px;
+    transform: scale(0.9);
 }
 
 form button.predict-btn:hover{
@@ -318,6 +344,10 @@ form button.predict-btn:hover{
 
 .content-section h6{
     font-size: 1.2rem;
+}
+
+.prediction-container .alert{
+    --bs-alert-border-radius: 12px;
 }
 
 .prediction-container{
