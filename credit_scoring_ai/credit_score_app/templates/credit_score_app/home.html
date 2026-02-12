@@ -83,18 +83,18 @@
       {% if prediction_result %}
         <h4>Predicted Results</h4>
         <div class="prediction-container">
-          <div class="content-section text-center">
-              <h2 class="mb-1">{{ prediction_result.credit_score }} <span class="text-muted">/ 850</span></h2>
-              
-              <div class="category-group">
-                  <span class="cat-pill pill-good">Good: {{ prediction_result.prob_good_pct|floatformat:2 }}% |</span>
-                  <span class="cat-pill pill-standard">Standard: {{ prediction_result.prob_standard_pct|floatformat:2 }}% |</span>
-                  <span class="cat-pill pill-poor">Poor: {{ prediction_result.prob_poor_pct|floatformat:2 }}%</span>
-              </div>
-          </div>
+            <div class="content-section text-center">
+                <h2 class="mb-1">{{ prediction_result.credit_score }} <span class="text-muted">/ 850</span></h2>
+                
+                <div class="category-group">
+                    <span class="cat-pill pill-good">Good: {{ prediction_result.prob_good_pct|floatformat:2 }}% |</span>
+                    <span class="cat-pill pill-standard">Standard: {{ prediction_result.prob_standard_pct|floatformat:2 }}% |</span>
+                    <span class="cat-pill pill-poor">Poor: {{ prediction_result.prob_poor_pct|floatformat:2 }}%</span>
+                </div>
+            </div>
 
         
-          <div class="content-section">
+            <div class="content-section">
             <div class="row gx-3 gy-3">
                 <div class="col-md-6">
                     <div class="analysis-column bg-strength">
@@ -113,26 +113,34 @@
                     </div>
                 </div>
             </div>
-          </div>
+            </div>
 
-            {% if shap_plot %}
+            {% if shap_error %}
+                <div class="alert alert-secondary shap-alert" role="alert">
+                    SHAP image unavailable!
+                </div>
+            {% elif shap_plot %}
                 <div class="content-section">
                     <h6 class="fw-bold">SHAP Explanation</h6>
                     <img src="{{ shap_plot }}" class="shap-img">
                 </div>
-            {% else %}
+            {% endif %}
+                
+            {% if ai_error %}
                 <div class="alert alert-secondary shap-alert" role="alert">
-                    SHAP image unavailable!
+                    Textual explanation unavailable!
+                </div>
+            {% else %}
+                <div class="content-section">
+                    <h6 class="fw-bold">Summary</h6>
+                    <div class="narration-box">
+                        {{ ai_explanation }}
+                    </div>
                 </div>
             {% endif %}
-
-          <div class="content-section">
-              <h6 class="fw-bold">Summary</h6>
-              <div class="narration-box">
-                  {{ ai_explanation }}
-              </div>
-          </div>
         </div>
+        {% else %}
+            {{pred_error}}
       {% endif %}
   </div>
 

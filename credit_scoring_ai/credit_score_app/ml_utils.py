@@ -138,6 +138,10 @@ class CreditScorePredictor:
             return "Unable to generate AI explanation at this time"
 
     def generate_shap_plot(self, input_data, pred_encoded):
+
+        if settings.USE_S3:
+            return None
+
         try:
             import shap
 
@@ -172,24 +176,31 @@ class CreditScorePredictor:
             return None
 
     def get_shap_breakdown(self, input_data):
-        import shap
+        if settings.USE_S3:
+            return []
 
-        input_df = pd.DataFrame([input_data])[self.feature_names]
-        explainer = shap.TreeExplainer(self.model)
-        shap_values = explainer.shap_values(input_df)
+        try:
+            import shap
 
-        breakdown = []
-        for i, feature in enumerate(self.feature_names):
-            breakdown.append(
-                {
-                    "feature": feature.replace("_", " ").title(),
-                    "good": float(shap_values[0, i, 0]),
-                    "poor": float(shap_values[0, i, 1]),
-                    "standard": float(shap_values[0, i, 2]),
-                }
-            )
+            input_df = pd.DataFrame([input_data])[self.feature_names]
+            explainer = shap.TreeExplainer(self.model)
+            shap_values = explainer.shap_values(input_df)
 
-        return breakdown
+            breakdown = []
+            for i, feature in enumerate(self.feature_names):
+                breakdown.append(
+                    {
+                        "feature": feature.replace("_", " ").title(),
+                        "good": float(shap_values[0, i, 0]),
+                        "poor": float(shap_values[0, i, 1]),
+                        "standard": float(shap_values[0, i, 2]),
+                    }
+                )
+
+            return breakdown
+
+        except Exception:
+            return []
 
     def analyze_factors(self, input_data):
         positive_factors = []

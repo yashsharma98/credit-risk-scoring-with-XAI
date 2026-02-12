@@ -98,13 +98,30 @@ def homeView(request):
             prediction_result["prob_poor_pct"] = prediction_result["prob_poor"] * 100
             prediction_result["prob_standard_pct"] = prediction_result["prob_standard"] * 100
 
-            shap_plot = predictor.generate_shap_plot(input_data, prediction_result["pred_encoded"])
+            # shap_plot = predictor.generate_shap_plot(input_data, prediction_result["pred_encoded"])
+            # shap_breakdown = predictor.get_shap_breakdown(input_data)
 
-            shap_breakdown = predictor.get_shap_breakdown(input_data)
+            shap_plot = None
+            shap_breakdown = []
+            shap_error = False
+
+            try:
+                shap_plot = predictor.generate_shap_plot(input_data, prediction_result["pred_encoded"])
+                shap_breakdown = predictor.get_shap_breakdown(input_data)
+            except Exception:
+                shap_error = True
 
             factors = predictor.analyze_factors(input_data)
 
-            ai_explanation = predictor.generate_ai_explanation(input_data, prediction_result)
+            # ai_explanation = predictor.generate_ai_explanation(input_data, prediction_result)
+            ai_explanation = ""
+            ai_error = False
+
+            try:
+                ai_explanation = predictor.generate_ai_explanation(input_data, prediction_result)
+            except Exception:
+                ai_explanation = "Unable to generate AI explanation at this time."
+                ai_error = True
 
             CreditScore.objects.create(
                 user=request.user,
@@ -121,17 +138,18 @@ def homeView(request):
                 "prediction_result": prediction_result,
                 "shap_plot": shap_plot,
                 "shap_breakdown": shap_breakdown,
+                "shap_error": shap_error,
                 "ai_explanation": ai_explanation,
+                "ai_error": ai_error,
                 "positive_factors": factors["positive"],
                 "negative_factors": factors["negative"],
                 "input_data": input_data,
             }
 
-        except Exception as e:
-            messages.error(request, f"Error making prediction: {str(e)}")
-            import traceback
-
-            print(f"Prediction error: {traceback.format_exc()}")
+        except Exception:
+            context = {
+                "pred_error": "Unable to get prediction at this time"
+            }
 
     return render(request, "credit_score_app/home.html", context)
 
