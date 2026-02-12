@@ -9,9 +9,8 @@ import pandas as pd
 from django.conf import settings
 
 matplotlib.use("Agg")
-import re
-
 import matplotlib.pyplot as plt
+from google import genai
 
 
 class CreditScorePredictor:
@@ -41,21 +40,7 @@ class CreditScorePredictor:
         with open(model_dir / "categorical_mappings.json", "r") as f:
             self.categorical_mappings = json.load(f)
 
-        self.qwen_model = None
-        self.qwen_tokenizer = None
-
         self.initialized = True
-
-    def load_qwen(self):
-        if self.qwen_model is None:
-            import torch
-            from transformers import AutoModelForCausalLM, AutoTokenizer
-
-            model_name = "Qwen/Qwen2.5-0.5B-Instruct"
-
-            self.qwen_model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16, device_map="cpu")
-
-            self.qwen_tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     def predict(self, input_data):
         input_df = pd.DataFrame([input_data])[self.feature_names]
@@ -87,85 +72,70 @@ class CreditScorePredictor:
 
     def generate_ai_explanation(self, input_data, prediction_result):
         try:
-            self.load_qwen()
+            client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
             credit_mix_map = {0: "Bad", 1: "Good", 2: "Standard", 3: "Unknown"}
             payment_min_map = {0: "No", 1: "Unknown", 2: "Yes"}
 
-            prompt = f"""Analyze this credit score prediction and provide a clear explanation.
+            prompt = f"""
+                Analyze this credit score prediction and provide a clear explanation.
 
-            Financial Profile:
-            - Outstanding Debt: ${input_data["outstanding_debt"]:.2f}
-            - Interest Rate: {input_data["interest_rate"]:.1f}%
-            - Days Late on Payments: {input_data["delay_from_due_date"]} days
-            - Credit History: {input_data["credit_history_months"]} months
-            - Credit Mix: {credit_mix_map[input_data["credit_mix"]]}
-            - Credit Limit Change: {input_data["changed_credit_limit"]:.1f}%
-            - Credit Inquiries: {input_data["num_credit_inquiries"]}
-            - Pays Minimum Amount: {payment_min_map[input_data["payment_of_min_amount"]]}
-            - Bank Accounts: {input_data["num_bank_accounts"]}
-            - Monthly Balance: ${input_data["monthly_balance"]:.2f}
-            - Annual Income: ${input_data["annual_income"]:.2f}
-            - Monthly EMI: ${input_data["total_emi_per_month"]:.2f}
+                Financial Profile:
+                - Outstanding Debt: ${input_data["outstanding_debt"]:.2f}
+                - Interest Rate: {input_data["interest_rate"]:.1f}%
+                - Days Late on Payments: {input_data["delay_from_due_date"]} days
+                - Credit History: {input_data["credit_history_months"]} months
+                - Credit Mix: {credit_mix_map[input_data["credit_mix"]]}
+                - Credit Limit Change: {input_data["changed_credit_limit"]:.1f}%
+                - Credit Inquiries: {input_data["num_credit_inquiries"]}
+                - Pays Minimum Amount: {payment_min_map[input_data["payment_of_min_amount"]]}
+                - Bank Accounts: {input_data["num_bank_accounts"]}
+                - Monthly Balance: ${input_data["monthly_balance"]:.2f}
+                - Annual Income: ${input_data["annual_income"]:.2f}
+                - Monthly EMI: ${input_data["total_emi_per_month"]:.2f}
 
-            Prediction: {prediction_result["predicted_category"].upper()} (Score: {prediction_result["credit_score"]}/850)
+                Prediction: {prediction_result["predicted_category"].upper()}
+                Score: {prediction_result["credit_score"]}/850
 
-            Output your response using this structure, with each numbered points. 
-            Do not use any bolding, asterisks, or hash symbols.
+                Respond strictly in this format:
 
-            Why this score
-            1.
-            2.
-            3.
+                Why this score
+                1.
+                2.
+                3.
 
-            Strengths
-            1.
-            2.
-            3.
+                Strengths
+                1.
+                2.
+                3.
 
-            Weaknesses
-            1.
-            2.
-            3.
+                Weaknesses
+                1.
+                2.
+                3.
 
-            How to improve
-            1.
-            2.
-            3.
+                How to improve
+                1.
+                2.
+                3.
 
-            Keep your response under 150 words total. Use plain English. No markdown symbols like #, *, or **."""
+                Keep under 200 words.
+                Plain English only.
+                No markdown symbols like #, *, **.
+            """
 
-            messages = [
-                {
-                    "role": "system",
-                    "content": "Consider as financial advisor. Provide clear explanations using bullet points only. Do not use markdown formatting symbols like #, *, or **.",  # noqa: E501
-                },
-                {"role": "user", "content": prompt},
-            ]
+            response = client.models.generate_content(
+                model="gemini-2.5-flash-lite",
+                contents=[prompt],
+            )
 
-            text = self.qwen_tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            text = response.text.strip()
+            text = text.replace("#", "").replace("*", "")
 
-            model_inputs = self.qwen_tokenizer([text], return_tensors="pt").to(self.qwen_model.device)
-
-            generated_ids = self.qwen_model.generate(**model_inputs, max_new_tokens=300, temperature=0.7, do_sample=True, top_p=0.9)
-
-            generated_ids = [output_ids[len(input_ids) :] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)]
-
-            response = self.qwen_tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
-
-            cleaned_response = response.strip()
-            cleaned_response = cleaned_response.replace("###", "")
-            cleaned_response = cleaned_response.replace("**", "")
-            cleaned_response = cleaned_response.replace("***", "")
-            cleaned_response = cleaned_response.replace("##", "")
-            cleaned_response = cleaned_response.replace("#", "")
-
-            cleaned_response = re.sub(r"\n{3,}", "\n\n", cleaned_response)
-
-            return cleaned_response.strip()
+            return text
 
         except Exception:
-            return "Unable to generate AI explanation at this time"
+            return "Unable to generate AI explanation at this time."
 
     def generate_shap_plot(self, input_data, pred_encoded):
         try:
@@ -197,8 +167,7 @@ class CreditScorePredictor:
             plt.close("all")
 
             return f"data:image/png;base64,{image_base64}"
-        except Exception as e:
-            print(f"SHAP plot error: {e}")
+        except Exception:
             plt.close("all")
             return None
 

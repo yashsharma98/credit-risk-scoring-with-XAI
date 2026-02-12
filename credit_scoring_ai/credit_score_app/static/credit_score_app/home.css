@@ -31,6 +31,23 @@ body {
     margin-right: 40px;
 }
 
+.navbar .navbar-toggler{
+    background-color: whitesmoke;
+    border: 0;
+    font-size: 1rem;
+    padding: 5px;
+}
+
+.navbar .navbar-toggler:focus{
+    border: 0;
+    outline: none;
+    box-shadow: none;
+}
+
+.navbar .navbar-toggler:hover{
+    background: gainsboro;
+}
+
 .navbar-nav li a:not(.dropdown-menu li a){
     border-radius: 30px;
     border: 1.5px solid transparent;
@@ -204,12 +221,13 @@ h1 {
 .form-container h2{
     margin-bottom: 50px;
     text-align: center;
+    font-size: 2rem;
 }
 
 .form-container {
     display: flex;
     flex-direction: column;
-    width: 30%;
+    width: 35%;
 }
 
 .form-container button {
@@ -220,7 +238,13 @@ h1 {
     font-weight: 500;
     padding: 8px 20px;
     text-decoration: none;
+    width: auto;
     transition: transform 0.2s;
+}
+
+.form-container button:focus,
+.form-container button:active{
+    background: gray;
 }
 
 .form-container button:hover {
@@ -269,6 +293,11 @@ form button.predict-btn {
     padding: 8px 20px;
     font-weight: 500;
     margin-top: 10px;
+}
+
+form button.predict-btn:focus,
+form button.predict-btn:active{
+    background: gray;
 }
 
 form button.predict-btn:hover{
@@ -443,4 +472,16 @@ form button.predict-btn:hover{
 
 hr{
     margin: 50px 0;
+}
+
+@media (max-width: 784px) {
+    .navbar .navbar-brand{
+        margin-left: 10px;
+    }
+
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        width: 70%;
+    }
 }

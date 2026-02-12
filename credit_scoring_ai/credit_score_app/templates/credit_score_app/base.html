@@ -22,11 +22,13 @@
     <nav class="navbar fixed-top navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand logo" href="#">Credit Scoring</a>
-                        
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
+                 
+            {% if user.is_authenticated %}
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            {% endif %}
+
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <ul class="navbar-nav ms-auto">
                     <div class="d-flex gap-2">
@@ -36,10 +38,6 @@
                             </li>
                             <li class="nav-item">
                                 <a class="{% if request.path == history %} btn btn-transparent active {% else %} btn btn-outline {% endif %}" href="{% url 'history' %}">History</a>
-                            </li>
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="btn btn-outline" href="{% url 'landingpg' %}">Home</a>
                             </li>
                         {% endif %}
         
